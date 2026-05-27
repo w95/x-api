@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.git/
+.gitignore
+.dockerignore
+Dockerfile
+docker-compose.yml
+README.md
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+sessions.jsonl
+LICENSE

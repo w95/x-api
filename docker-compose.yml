@@ -1,0 +1,19 @@
+services:
+  x-api:
+    build: .
+    image: x-api:latest
+    container_name: x-api
+    ports:
+      - "127.0.0.1:8086:8000"
+    volumes:
+      - ./sessions.jsonl:/app/sessions.jsonl:ro
+      - x-api-db:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=2).status==200 else 1)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  x-api-db:
