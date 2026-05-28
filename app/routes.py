@@ -35,24 +35,6 @@ async def get_user_tweets(
     return TimelinePage(user=UserOut.from_twscrape(u), tweets=tweets, count=len(tweets))
 
 
-@router.get("/user/{name}/media", response_model=TimelinePage)
-async def get_user_media(
-    name: str,
-    limit: int = Query(20, ge=1, le=200),
-    api: API = Depends(get_api),
-) -> TimelinePage:
-    u = await api.user_by_login(name)
-    if u is None:
-        raise HTTPException(404, f'User "{name}" not found')
-
-    tweets: list[TweetOut] = []
-    async for t in api.user_media(u.id, limit=limit):
-        tweets.append(TweetOut.from_twscrape(t))
-        if len(tweets) >= limit:
-            break
-    return TimelinePage(user=UserOut.from_twscrape(u), tweets=tweets, count=len(tweets))
-
-
 @router.get("/tweet/{tweet_id}", response_model=TweetOut)
 async def get_tweet(tweet_id: int, api: API = Depends(get_api)) -> TweetOut:
     t = await api.tweet_details(tweet_id)
